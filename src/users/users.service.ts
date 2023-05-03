@@ -1,8 +1,13 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
+import { FindUserDto } from './dto/find-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -23,11 +28,35 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  findOneBy(id: number) {
-    return this.usersRepository.findOneBy({ id });
+  async findOne(id: number) {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
-  find(email: string) {
-    return this.usersRepository.find({ where: { email } });
+  find(where: FindUserDto) {
+    if (where.id) {
+      where.id = Number(where.id);
+    }
+    return this.usersRepository.find({ where } as any);
+  }
+
+  async update(id: number, attrs: Partial<User>) {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    Object.assign(user, attrs);
+    return this.usersRepository.save(user);
+  }
+
+  async remove(id: number) {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return this.usersRepository.remove(user);
   }
 }
