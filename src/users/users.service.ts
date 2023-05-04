@@ -28,7 +28,7 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -36,11 +36,11 @@ export class UsersService {
     return user;
   }
 
-  find(where: FindUserDto) {
+  async find(where: FindUserDto): Promise<User[]> {
     if (where.id) {
       where.id = Number(where.id);
     }
-    return this.usersRepository.find({ where } as any);
+    return await this.usersRepository.find({ where } as any);
   }
 
   async update(id: number, attrs: Partial<User>) {
