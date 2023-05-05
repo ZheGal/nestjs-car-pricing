@@ -17,6 +17,7 @@ import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dto/user.dto';
 
 @Controller('auth')
+@Serialize(UserDto)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -26,13 +27,11 @@ export class UsersController {
   }
 
   @Get('/:id')
-  @Serialize(UserDto)
   async findUser(@Param('id') id: string): Promise<User> {
     return await this.usersService.findOne(parseInt(id));
   }
 
   @Get()
-  @Serialize(UserDto)
   async findAllUsers(@Query() query: FindUserDto): Promise<User[]> {
     return await this.usersService.find(query);
   }
