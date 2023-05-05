@@ -7,15 +7,13 @@ import {
   Query,
   Delete,
   Patch,
-  UseInterceptors,
-  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { FindUserDto } from './dto/find-user.dto';
 import { User } from './user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dto/user.dto';
 
 @Controller('auth')
@@ -28,13 +26,13 @@ export class UsersController {
   }
 
   @Get('/:id')
-  @UseInterceptors(new SerializeInterceptor(UserDto))
+  @Serialize(UserDto)
   async findUser(@Param('id') id: string): Promise<User> {
     return await this.usersService.findOne(parseInt(id));
   }
 
   @Get()
-  @UseInterceptors(new SerializeInterceptor(UserDto))
+  @Serialize(UserDto)
   async findAllUsers(@Query() query: FindUserDto): Promise<User[]> {
     return await this.usersService.find(query);
   }
