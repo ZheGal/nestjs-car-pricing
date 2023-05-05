@@ -37,12 +37,15 @@ export class UsersController {
   }
 
   @Delete('/:id')
-  removeUser(@Param('id') id: string) {
+  removeUser(@Param('id') id: string): Promise<User> {
     return this.usersService.remove(parseInt(id));
   }
 
   @Patch('/:id')
-  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+  updateUser(
+    @Param('id') id: string,
+    @Body() body: UpdateUserDto,
+  ): Promise<User> {
     return this.usersService.update(parseInt(id), body);
   }
 }
