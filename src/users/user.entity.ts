@@ -3,11 +3,11 @@ import { Report } from 'src/reports/report.entity';
 import {
   AfterInsert,
   AfterUpdate,
-  AfterRemove,
   Entity,
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
+  BeforeRemove,
 } from 'typeorm';
 
 @Entity()
@@ -35,7 +35,7 @@ export class User {
     console.log(`Updated user with id ${this.id}`);
   }
 
-  @AfterRemove()
+  @BeforeRemove()
   logRemove() {
     console.log(`Removed user with id ${this.id}`);
   }
