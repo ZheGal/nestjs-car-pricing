@@ -10,7 +10,6 @@ export class CurrentUserMiddleware implements NestMiddleware {
     const { userId } = req.session || {};
     if (userId) {
       const user = await this.usersService.findOne(userId);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       req.currentUser = user;
     }
